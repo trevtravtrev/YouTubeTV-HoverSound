@@ -1,18 +1,37 @@
 {
-    "manifest_version": 3,
-    "name": "YouTubeTV-HoverSound",
-    "version": "1.4",
-    "permissions": [],
-    "host_permissions": [
-      "*://*.youtube.com/*",
-      "*://*.tv.youtube.com/*"
-    ],
-    "content_scripts": [
-      {
-        "matches": ["*://*.youtube.com/*", "*://*.tv.youtube.com/*"],
-        "js": ["content.js"],
-        "all_frames": true,
-        "run_at": "document_start"
-      }
-    ]
-  }
+  "manifest_version": 3,
+  "name": "YouTubeTV-HoverSound",
+  "version": "1.4",
+  "permissions": [],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*.tv.youtube.com/*",
+    "*://*.crackstreams.dev/*",
+    "*://*.methstreams.com/*",
+    "*://*.streameast.co/*",
+    "*://*.sekemisport.com/*",
+    "*://*.techguyforu.com/*",
+    "*://*.ihdstreams.xyz/*",
+    "*://*.tvsportslive.fr/*",
+    "*://*.nflscoop.xyz/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.tv.youtube.com/*",
+        "*://*.crackstreams.dev/*",
+        "*://*.methstreams.com/*",
+        "*://*.streameast.co/*",
+        "*://*.sekemisport.com/*",
+        "*://*.techguyforu.com/*",
+        "*://*.ihdstreams.xyz/*",
+        "*://*.tvsportslive.fr/*",
+        "*://*.nflscoop.xyz/*"
+      ],
+      "js": ["content.js"],
+      "all_frames": true,
+      "run_at": "document_start"
+    }
+  ]
+}

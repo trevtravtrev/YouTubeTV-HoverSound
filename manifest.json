@@ -1,8 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "YouTubeTV-HoverSound",
-  "version": "1.4",
-  "permissions": [],
+  "name": "YouTubeTV HoverSound",
+  "version": "1.5",
+  "description": "Mute/unmute YouTubeTV windows based on mouse hover. Great for when you're watching multiple windows.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
   "host_permissions": [
     "*://*.youtube.com/*",
     "*://*.tv.youtube.com/*",
@@ -15,6 +19,9 @@
     "*://*.tvsportslive.fr/*",
     "*://*.nflscoop.xyz/*"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -33,5 +40,18 @@
       "all_frames": true,
       "run_at": "document_start"
     }
-  ]
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
 }

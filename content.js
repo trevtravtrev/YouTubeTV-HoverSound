@@ -1,6 +1,7 @@
 // content.js
 (() => {
   let isHovered = false;
+  let isEnabled = true;
   const ENFORCE_INTERVAL = 50; // ms
 
   const audioContexts = new WeakMap();
@@ -15,6 +16,8 @@
   }
 
   function forceMuteState(video) {
+    if (!isEnabled) return;
+
     if (!audioContexts.has(video)) {
       audioContexts.set(video, createAudioContext(video));
     }
@@ -30,17 +33,32 @@
   }
 
   function updateMuteState() {
-    document.querySelectorAll('video').forEach(forceMuteState);
+    document.querySelectorAll('video').forEach(video => {
+      if (isEnabled) {
+        forceMuteState(video);
+      } else {
+        // When disabled, reset to original state
+        if (audioContexts.has(video)) {
+          const { gain } = audioContexts.get(video);
+          gain.gain.setValueAtTime(1, gain.context.currentTime);
+          video.muted = false;  // Unmute the video when disabled
+        }
+      }
+    });
   }
 
   function handleMouseEnter() {
     isHovered = true;
-    updateMuteState();
+    if (isEnabled) {
+      updateMuteState();
+    }
   }
 
   function handleMouseLeave() {
     isHovered = false;
-    updateMuteState();
+    if (isEnabled) {
+      updateMuteState();
+    }
   }
 
   document.addEventListener('mouseenter', handleMouseEnter);
@@ -73,7 +91,7 @@
   Object.defineProperty(HTMLMediaElement.prototype, 'volume', {
     set: function(value) {
       originalVolumeSetter.call(this, value);
-      if (!isHovered) {
+      if (isEnabled && !isHovered) {
         forceMuteState(this);
       }
     }
@@ -81,11 +99,19 @@
 
   Object.defineProperty(HTMLMediaElement.prototype, 'muted', {
     set: function(value) {
-      if (isHovered) {
-        originalMutedSetter.call(this, value);
-      } else {
+      if (isEnabled && !isHovered) {
         originalMutedSetter.call(this, true);
+      } else {
+        originalMutedSetter.call(this, value);
       }
+    }
+  });
+
+  // Listen for messages from popup
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === "toggleExtension") {
+      isEnabled = request.isEnabled;
+      updateMuteState();
     }
   });
 
